@@ -21,9 +21,19 @@ extern NSString *const DAVClientErrorDomain;
 	BOOL _executing;
 }
 
+#if __has_feature(objc_arc)
 @property (strong, readonly) NSString *path;
+#else
+@property (retain, readonly) NSString *path;
+#endif
 
+#if __has_feature(objc_arc_weak)
 @property (weak) __weak id < DAVRequestDelegate > delegate;
+#elif __has_feature(objc_arc)
+@property (unsafe_unretained) __weak id < DAVRequestDelegate > delegate;
+#else
+@property (assign) __weak id < DAVRequestDelegate > delegate;
+#endif
 
 - (id)initWithPath:(NSString *)aPath;
 
